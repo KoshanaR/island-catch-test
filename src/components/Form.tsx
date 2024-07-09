@@ -1,10 +1,10 @@
-import { DataStore, Predicates } from "@aws-amplify/datastore";
-import { Box, Button, Stack, TextField, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { DataStore } from "@aws-amplify/datastore";
+import { Box, Button, Stack, TextField } from "@mui/material";
+import { useEffect, useState } from "react";
 import { createForm } from "../graphql/mutations";
-// import { API } from "aws-amplify";
 import { generateClient } from "aws-amplify/api";
 import { listForms } from "../graphql/queries";
+import { Form as FormModel } from "../models";
 
 interface SampleForm {
   name: string;
@@ -22,56 +22,63 @@ const Form = () => {
 
   const client = generateClient();
 
+  const initializeDataStore = async () => {
+    try {
+      await DataStore.start();
+    } catch (error) {
+      console.log("🚀 ~ initializaDataStore ~ error:", error);
+    }
+  };
+
   const createDetails = async () => {
-    if (
-      formFields.name !== "" ||
-      formFields.designation !== "" ||
-      formFields.email !== ""
-    ) {
-      // DataStore.save({
-      //   name: formFields.name,
-      //   email: formFields.email,
-      //   designation: formFields.designation,
-      //   createdAt: new Date().toISOString(),
-      // })
-      //   .then(() => {
-      //     console.log("created");
-      //   })
-      //   .catch((e) => {
-      //     console.log("error : ", e.message);
-      //   });
+    try {
+      if (
+        formFields.name !== "" &&
+        formFields.designation !== "" &&
+        formFields.email !== ""
+      ) {
+        DataStore.save(
+          new FormModel({
+            name: formFields.name,
+            email: formFields.email,
+            designation: formFields.designation,
+          })
+        );
 
-      // DataStore.query(
-      //   { name: String!, email: String!, designation: String! },
-      //   Predicates
-      // );
+        const data = {
+          name: formFields.name,
+          email: formFields.email,
+          designation: formFields.designation,
+        };
 
-      const data = {
-        name: formFields.name,
-        email: formFields.email,
-        designation: formFields.designation,
-      };
+        await client.graphql({ query: createForm, variables: { input: data } });
 
-      await client.graphql({ query: createForm, variables: { input: data } });
+        fetchData();
 
-      fetchData();
-
-      setFormFields({
-        name: "",
-        email: "",
-        designation: "",
-      });
+        setFormFields({
+          name: "",
+          email: "",
+          designation: "",
+        });
+      }
+    } catch (error) {
+      console.log("🚀 ~ createDetails ~ error:", error);
     }
   };
 
   const fetchData = async () => {
-    const apiData = await client.graphql({ query: listForms });
+    try {
+      const apiData = await client.graphql({ query: listForms });
 
-    const dataFromApi = apiData.data.listForms.items;
+      const dataFromApi = apiData.data.listForms.items;
 
-    setData(dataFromApi);
+      setData(dataFromApi);
+    } catch (error) {
+      console.log("🚀 ~ fetchData ~ error:", error);
+    }
   };
   useEffect(() => {
+    initializeDataStore();
     fetchData();
   }, []);
   return (
