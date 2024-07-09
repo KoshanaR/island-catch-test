@@ -1,0 +1,26 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-islandcatchtest-dev-55dc7-authRole",
+      "UnauthRoleArn": "arn:aws:iam::533267416488:role/amplify-islandcatchtest-dev-55dc7-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::533267416488:role/amplify-islandcatchtest-dev-55dc7-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-islandcatchtest-dev-55dc7-deployment",
+      "UnauthRoleName": "amplify-islandcatchtest-dev-55dc7-unauthRole",
+      "StackName": "amplify-islandcatchtest-dev-55dc7",
+      "StackId": "arn:aws:cloudformation:us-east-1:533267416488:stack/amplify-islandcatchtest-dev-55dc7/662ff990-3dc0-11ef-b9f3-0eb6554517e1",
+      "AmplifyAppId": "d15ky0iaejxyoo"
+    },
+    "categories": {
+      "api": {
+        "islandcatchtest": {}
+      },
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d15ky0iaejxyoo",
+          "type": "manual"
+        }
+      }
+    }
+  }
+}
